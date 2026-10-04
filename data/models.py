@@ -1,13 +1,13 @@
 from pydantic import BaseModel, EmailStr
 from datetime import date
-from typing import Literal,Optional
+from typing import Literal, Optional
 
 class Alumno(BaseModel):
     id: int
     nombre: str
     apellido: str
     email: EmailStr
-    es_menor: Optional[bool] = True
+    es_menor: bool = True
     grupo_id: int
 
 
@@ -20,6 +20,6 @@ class RegistroAsistencia(BaseModel):
     grupo_id: int
     alumno_id: int
     fecha: date
-    presente: Literal['presente', 'ausente', 'tarde']
+    estado: Literal['presente', 'ausente', 'tarde']
 
 
