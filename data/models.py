@@ -1,6 +1,8 @@
-from pydantic import BaseModel, EmailStr
 from datetime import date
-from typing import Literal, Optional
+from typing import Literal
+
+from pydantic import BaseModel, EmailStr
+
 
 class Alumno(BaseModel):
     id: int
