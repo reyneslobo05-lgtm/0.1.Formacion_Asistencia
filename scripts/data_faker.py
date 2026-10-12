@@ -26,12 +26,23 @@ with open(RUTA_GRU, mode="w", newline="", encoding="utf-8") as data:
     writer.writerow(["id", "nombre", "dias_semana"])
     for i in range(1, 8):
         nombre = fake.random_element(
-            elements=[f"Elefantes {i}", f"Tigres {i}", f"Leones {i}", f"Jirafas {i}", f"Cebras {i}", f"Rinocerontes {i}", f"Hipopótamos {i}", f"Cocodrilos {i}", f"Serpientes {i}", f"Avestruz {i}"],
-            )
-        
+            elements=[
+                f"Elefantes {i}",
+                f"Tigres {i}",
+                f"Leones {i}",
+                f"Jirafas {i}",
+                f"Cebras {i}",
+                f"Rinocerontes {i}",
+                f"Hipopótamos {i}",
+                f"Cocodrilos {i}",
+                f"Serpientes {i}",
+                f"Avestruz {i}",
+            ],
+        )
+
         dias_semana = fake.random_elements(
-            elements=[0,1,2,3,4],
+            elements=[0, 1, 2, 3, 4],
             length=fake.random_int(min=1, max=3),
-            unique = True,
+            unique=True,
         )
         writer.writerow([i, nombre, sorted(dias_semana)])

@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Literal
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
 class Alumno(BaseModel):
@@ -18,14 +18,22 @@ class Grupo(BaseModel):
     nombre: str
     dias_semana: list[int]  # 0: lunes, 1: martes, 2: miércoles, 3: jueves, 4: viernes
 
+
 class RegistroAsistencia(BaseModel):
     id: int
     grupo_id: int
     alumno_id: int
     fecha: date
-    estado: Literal['presente', 'ausente', 'tarde']
+    estado: Literal["presente", "ausente", "tarde"]
 
-class Nodo:
-    def ejecutar(self, valores):
-        raise NotImplementedError("El método ejecutar debe ser implementado por la subclase.")
 
+class Contexto(BaseModel):
+    model_config = ConfigDict(validate_assignment=True)
+
+    fecha: date
+    alumnos: list[Alumno] = Field(default_factory=list)
+    grupos: list[Grupo] = Field(default_factory=list)
+    grupos_hoy: list[Grupo] = Field(default_factory=list)
+    registros_asistencia: list[RegistroAsistencia] = Field(default_factory=list)
+    alertas: list[str] = Field(default_factory=list)
+    contador: int = 0

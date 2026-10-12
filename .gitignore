@@ -11,3 +11,5 @@ wheels/
 
 # Secretos y configuración local
 .env
+data/asistencia_*.csv
+data/registros.csv
