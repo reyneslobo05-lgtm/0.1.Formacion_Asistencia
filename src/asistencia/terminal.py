@@ -1,15 +1,16 @@
+import logging
 from datetime import date
 
 from asistencia.models import Alumno, Grupo, RegistroAsistencia
+
+logger = logging.getLogger(__name__)
 
 
 def pasar_lista(
     grupos_seleccionados: list[Grupo], alumnos: list[Alumno], fecha: date, num_reg: int
 ) -> tuple:
-    """
-    Función para pasar lista a los grupos seleccionados.
-    """
     if not grupos_seleccionados:
+        logger.info("Ningún grupo tiene clase hoy")
         return [], num_reg
     ids_grupos_seleccionados = [grupo.id for grupo in grupos_seleccionados]
     alumnos_registrados = []
@@ -44,6 +45,3 @@ def pasar_lista(
                     )
                 )
     return alumnos_registrados, num_reg
-
-
-

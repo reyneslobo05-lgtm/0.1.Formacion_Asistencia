@@ -13,3 +13,4 @@ wheels/
 .env
 data/asistencia_*.csv
 data/registros.csv
+data/logging.txt

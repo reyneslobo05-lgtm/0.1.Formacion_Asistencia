@@ -1,16 +1,19 @@
 import csv
+import logging
 from datetime import date
 
 from asistencia.lectura import DIR_DATA, RUTA_REG
-from asistencia.models import RegistroAsistencia
+from asistencia.models import EscrituraError, RegistroAsistencia
+
+logger = logging.getLogger(__name__)
 
 
 def escribir_registro(fecha: date, num: int, ruta=RUTA_REG):
-    # Anotar un registro más.
     if not ruta.exists():
-        with open(ruta, mode="a", newline="", encoding="utf-8") as reg:
+        with open(ruta, mode="w", newline="", encoding="utf-8") as reg:
             writer = csv.DictWriter(reg, fieldnames=["fecha", "registro"])
             writer.writeheader()
+        logger.info("Documento registro creado")
 
     with open(ruta, mode="a", newline="", encoding="utf-8") as reg:
         writer = csv.DictWriter(reg, fieldnames=["fecha", "registro"])
@@ -23,22 +26,24 @@ def escribir_registro(fecha: date, num: int, ruta=RUTA_REG):
 def veri_doc_asistencia(fecha: date, ruta=DIR_DATA):
     year, month, _day = str(fecha).split("-")
     ruta_doc = ruta / f"asistencia_{year}-{month}.csv"
-    if ruta_doc.is_file():
-        pass
-    else:
+    if not ruta_doc.is_file():
         with open(ruta_doc, "w", newline="", encoding="utf-8") as doc:
             writer = csv.DictWriter(
                 doc, fieldnames=["id", "grupo_id", "alumno_id", "fecha", "estado"]
             )
             writer.writeheader()
-
+        logger.info("Nuevo documento de asistencia creado")
     return ruta_doc
 
 
 def escribir_asistencia(registro_asistencia: list[RegistroAsistencia], ruta) -> None:
-    with open(ruta, "a", newline="", encoding="utf-8") as doc:
-        writer = csv.DictWriter(
-            doc, fieldnames=["id", "grupo_id", "alumno_id", "fecha", "estado"]
-        )
-        for line in registro_asistencia:
-            writer.writerow(line.model_dump())
+    try:
+        with open(ruta, "a", newline="", encoding="utf-8") as doc:
+            writer = csv.DictWriter(
+                doc, fieldnames=["id", "grupo_id", "alumno_id", "fecha", "estado"]
+            )
+            for line in registro_asistencia:
+                writer.writerow(line.model_dump())
+    except PermissionError:
+        logger.warning("Documento abierto e inaccessible")
+        raise EscrituraError
