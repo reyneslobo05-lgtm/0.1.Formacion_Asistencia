@@ -1,0 +1,5 @@
+{
+  "nombre": "asistencia_diaria",
+  "nodos": ["LeerAlumnos", "LeerGrupos", "LeerRegistro", "FiltrarGruposPorDia",
+            "PasarLista", "EscribirCSV", "EscribirContador", "LeerAusentes", "EnviarCorreo"]
+}

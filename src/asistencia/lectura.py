@@ -101,8 +101,8 @@ def detectar_ausencia(fecha: date, alumnos: list[Alumno]):
 
     id_ausentes = []
 
-    for alumno in ausente:
-        if ausente[alumno] > 2:
+    for alumno, value in ausente.items():
+        if value > 2:
             id_ausentes.append(alumno)
 
     correo_ausentes = []

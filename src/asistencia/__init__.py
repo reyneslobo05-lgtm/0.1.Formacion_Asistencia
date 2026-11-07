@@ -1,24 +1,16 @@
+import asyncio
 import logging
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
 from dotenv import load_dotenv
 
+from asistencia.configuracion import cargar_workflow
 from asistencia.lectura import DIR_DATA
-from asistencia.models import Contexto, DatosNoEncontradosError
-from asistencia.nodos import (
-    EnviarCorreo,
-    EscribirContador,
-    EscribirCSV,
-    FiltrarGruposPorDia,
-    LeerAlumnos,
-    LeerAusentes,
-    LeerGrupos,
-    LeerRegistro,
-    PasarLista,
-)
+from asistencia.models import AsistenciaError, Contexto, DatosNoEncontradosError
 from asistencia.workflow import Workflow
 
+logger = logging.getLogger(__name__)
 logging.basicConfig(
     filename=DIR_DATA / "logging.txt",
     level="INFO",
@@ -31,18 +23,12 @@ def main() -> None:
         load_dotenv(DIR_DATA.parent / ".env")
     except FileNotFoundError:
         raise DatosNoEncontradosError
-    nodos = [
-        LeerAlumnos(),
-        LeerGrupos(),
-        LeerRegistro(),
-        FiltrarGruposPorDia(),
-        PasarLista(),
-        EscribirCSV(),
-        EscribirContador(),
-        LeerAusentes(),
-        EnviarCorreo(),
-    ]
-
+    try:
+        nodos = cargar_workflow()
+    except AsistenciaError as e:
+        logger.error(f"Error al inicializar los nodos: {e}")
+        print(f"Error al inicializar los nodos: {e}")
+        return
     while True:
         dia = (
             input(
@@ -60,4 +46,4 @@ def main() -> None:
         except ValueError:
             print("Formato no válido!")
 
-    Workflow(nodos).ejecutar(contexto)
+    asyncio.run(Workflow(nodos).ejecutar(contexto))

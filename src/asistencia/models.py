@@ -68,3 +68,13 @@ class EscrituraError(AsistenciaError):
 class NotificacionError(AsistenciaError):
     def __init__(self, value="Ha habido un error notificando las ausencias"):
         super().__init__(value)
+
+
+class NodeError(AsistenciaError):
+    def __init__(self, value="El nodo no está definido en el workflow"):
+        super().__init__(value)
+
+
+class ConfigurationError(AsistenciaError):
+    def __init__(self, value="Ha habido un error en la configuración del workflow"):
+        super().__init__(value)

@@ -20,39 +20,39 @@ logger = logging.getLogger(__name__)
 
 
 class Nodo:
-    def ejecutar(self, contexto: Contexto) -> None:
+    async def ejecutar(self, contexto: Contexto) -> None:
         # Lógica para ejecutar el nodo con el contexto proporcionado
         raise NotImplementedError
 
 
 class LeerAlumnos(Nodo):
-    def ejecutar(self, contexto: Contexto) -> None:
+    async def ejecutar(self, contexto: Contexto) -> None:
         logger.info("Ejecutando Leer Alumnos")
         # Lógica para leer alumnos y actualizar el contexto
         contexto.alumnos = leer_alumnos()
 
 
 class LeerGrupos(Nodo):
-    def ejecutar(self, contexto: Contexto) -> None:
+    async def ejecutar(self, contexto: Contexto) -> None:
         logger.info("Ejecutando LeerGrupos")
         # Lógica para leer grupos y actualizar el contexto
         contexto.grupos = leer_grupos()
 
 
 class LeerRegistro(Nodo):
-    def ejecutar(self, contexto: Contexto) -> None:
+    async def ejecutar(self, contexto: Contexto) -> None:
         logger.info("Ejecutando LeerRegistro")
         contexto.contador = leer_registro(contexto.fecha)
 
 
 class FiltrarGruposPorDia(Nodo):
-    def ejecutar(self, contexto: Contexto) -> None:
+    async def ejecutar(self, contexto: Contexto) -> None:
         logger.info("Ejecutando FiltrarGruposPorDia")
         contexto.grupos_hoy = seleccionar_grupos(contexto.grupos, contexto.fecha)
 
 
 class PasarLista(Nodo):
-    def ejecutar(self, contexto: Contexto) -> None:
+    async def ejecutar(self, contexto: Contexto) -> None:
         logger.info("Ejecutando PasarLista")
         contexto.registros_asistencia, contexto.contador = pasar_lista(
             contexto.grupos_hoy, contexto.alumnos, contexto.fecha, contexto.contador
@@ -60,15 +60,14 @@ class PasarLista(Nodo):
 
 
 class EscribirContador(Nodo):
-    def ejecutar(self, contexto: Contexto) -> None:
+    async def ejecutar(self, contexto: Contexto) -> None:
         if contexto.registros_asistencia:
             logger.info("Ejecutando EscribirContador")
             escribir_registro(fecha=contexto.fecha, num=contexto.contador)
 
 
 class EscribirCSV(Nodo):
-    def ejecutar(self, contexto: Contexto) -> None:
-
+    async def ejecutar(self, contexto: Contexto) -> None:
         if not contexto.registros_asistencia:
             return
         logger.info("Ejecutando EscribirCSV")
@@ -79,7 +78,7 @@ class EscribirCSV(Nodo):
 
 
 class LeerAusentes(Nodo):
-    def ejecutar(self, contexto: Contexto) -> None:
+    async def ejecutar(self, contexto: Contexto) -> None:
         logger.info("Ejecutando Leer Ausentes")
         if str(contexto.fecha.weekday()) != "4":
             logger.info("Solo se comprueba la asistencia los viernes.")
@@ -90,9 +89,22 @@ class LeerAusentes(Nodo):
 
 
 class EnviarCorreo(Nodo):
-    def ejecutar(self, contexto: Contexto) -> None:
+    async def ejecutar(self, contexto: Contexto) -> None:
         logger.info("Ejecutando Enviar Correo")
         if str(contexto.fecha.weekday()) != "4":
             logger.info("Solo se comprueba la asistencia los viernes.")
             return
-        enviar_notificaciones(correo_alumnos=contexto.alumnos_ausentes)
+        await enviar_notificaciones(correo_alumnos=contexto.alumnos_ausentes)
+
+
+dict_nodos = {
+    "LeerAlumnos": LeerAlumnos(),
+    "LeerGrupos": LeerGrupos(),
+    "LeerRegistro": LeerRegistro(),
+    "FiltrarGruposPorDia": FiltrarGruposPorDia(),
+    "PasarLista": PasarLista(),
+    "EscribirContador": EscribirContador(),
+    "EscribirCSV": EscribirCSV(),
+    "LeerAusentes": LeerAusentes(),
+    "EnviarCorreo": EnviarCorreo(),
+}

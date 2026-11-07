@@ -10,11 +10,11 @@ class Workflow:
     def __init__(self, nodos: list[Nodo]):
         self.nodos = nodos
 
-    def ejecutar(self, contexto: Contexto) -> None:
+    async def ejecutar(self, contexto: Contexto) -> None:
         for nodo in self.nodos:
             try:
-                nodo.ejecutar(contexto)
+                await nodo.ejecutar(contexto)
                 logger.info(f"{type(nodo).__name__} ha funcionado")
             except Exception:
-                logger.exception()
+                logger.exception(f"{type(nodo).__name__} ha fallado")
                 break
