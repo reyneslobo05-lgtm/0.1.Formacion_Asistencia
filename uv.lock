@@ -18,6 +18,7 @@ source = { editable = "." }
 dependencies = [
     { name = "faker" },
     { name = "pydantic", extra = ["email"] },
+    { name = "pytest" },
     { name = "python-dotenv" },
     { name = "tenacity" },
 ]
@@ -32,6 +33,7 @@ dev = [
 requires-dist = [
     { name = "faker", specifier = ">=40.39.0" },
     { name = "pydantic", extras = ["email"], specifier = ">=2.13.5" },
+    { name = "pytest", specifier = ">=9.1.1" },
     { name = "python-dotenv", specifier = ">=1.2.4" },
     { name = "tenacity", specifier = ">=9.2.1" },
 ]

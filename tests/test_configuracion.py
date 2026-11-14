@@ -1,10 +1,11 @@
 import json
 
 import pytest
+from pydantic import ValidationError
+
 from asistencia.configuracion import ConfigWorkflow, cargar_workflow
 from asistencia.models import ConfigurationError, DatosNoEncontradosError
 from asistencia.nodos import dict_nodos
-from pydantic import ValidationError
 
 
 def test_ConfigWorkflow_valid():
@@ -16,20 +17,20 @@ def test_ConfigWorkflow_valid():
 
 
 def test_ConfigWorkflow_emptynodos():
-    with pytest.raises(ValidationError):  # no se cómo hacer lo del match.
-        config_empty = ConfigWorkflow(nombre="Workflow_empty", nodos=[])
+    with pytest.raises(ValidationError):  
+        ConfigWorkflow(nombre="Workflow_empty", nodos=[])
 
 
 def test_ConfigWorkflow_invalidnodo():
-    with pytest.raises(ValidationError):  # no se cómo hacer lo del match.
-        config_invalid = ConfigWorkflow(
+    with pytest.raises(ValidationError):  
+        ConfigWorkflow(
             nombre="Workflow_invalid", nodos=["nodo_inexistente"]
         )
 
 
 def test_ConfigWorkflow_campo_ausente():
     with pytest.raises(ValidationError):  # no se cómo hacer lo del match.
-        config_missing = ConfigWorkflow(
+        ConfigWorkflow(
             nombre="Workflow_missing"
         )  # Campo 'nodos' ausente
 

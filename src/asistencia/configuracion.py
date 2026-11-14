@@ -27,19 +27,19 @@ class ConfigWorkflow(BaseModel):
         return valor
 
 
-def cargar_workflow():
+def cargar_workflow(path = DIR_JSON):
     try:
         config = ConfigWorkflow.model_validate_json(
-            DIR_JSON.read_text(encoding="utf-8")
+            path.read_text(encoding="utf-8")
         )
     except FileNotFoundError:
-        logger.error(f"No se encontró el archivo {DIR_JSON}.")
-        raise DatosNoEncontradosError(f"No se encontró el archivo {DIR_JSON}.")
+        logger.error(f"No se encontró el archivo {path}.")
+        raise DatosNoEncontradosError(f"No se encontró el archivo {path}.")
     except ValidationError as e:
         for error in e.errors():
             campo = ".".join(str(parte) for parte in error["loc"]) or "JSON"
             logger.warning(f"Campo: '{campo}' Mensaje: {error['msg']}")
-        raise ConfigurationError(f"Error de validación en el archivo {DIR_JSON}: {e}")
+        raise ConfigurationError(f"Error de validación en el archivo {path}: {e}")
     lista_nodos = []
     for nodo in config.nodos:
         lista_nodos.append(dict_nodos[nodo])

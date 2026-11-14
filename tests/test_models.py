@@ -1,11 +1,12 @@
 import pytest
-from asistencia.models import Alumno, Contexto, RegistroAsistencia
 from pydantic import ValidationError
+
+from asistencia.models import Alumno, Contexto, RegistroAsistencia
 
 
 def test_alumno():
     with pytest.raises(ValidationError):
-        alumno1 = Alumno(
+        Alumno(
             id="hola",
             nombre="Juan",
             apellido="Pérez",
@@ -13,7 +14,7 @@ def test_alumno():
             email="juan@ejemplo.com",
         )
     with pytest.raises(ValidationError):
-        alumno2 = Alumno(
+        Alumno(
             id=456,
             nombre="María",
             apellido="Gómez",
@@ -24,18 +25,18 @@ def test_alumno():
 
 def test_RegistroAsistencia():
     with pytest.raises(ValidationError):
-        registro1 = RegistroAsistencia(
+        RegistroAsistencia(
             id=1, grupo_id=1, alumno_id=1, fecha="2024", estado="presente"
         )
     with pytest.raises(ValidationError):
-        registro2 = RegistroAsistencia(
+        RegistroAsistencia(
             id=2, grupo_id=2, alumno_id=2, fecha="2024-06-02", estado="invalido"
         )
 
 
 def test_Contexto():
     with pytest.raises(ValidationError):
-        contexto1 = Contexto(
+        Contexto(
             fecha="06",
             alumnos=[],
             grupos=[],

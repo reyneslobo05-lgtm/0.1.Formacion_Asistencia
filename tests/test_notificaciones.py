@@ -2,9 +2,10 @@ import asyncio
 import smtplib
 
 import pytest
+from tenacity import wait_none
+
 from asistencia.models import NotificacionError, VariablesError
 from asistencia.notificaciones import conectar, enviar_notificaciones
-from tenacity import wait_none
 
 
 @pytest.fixture

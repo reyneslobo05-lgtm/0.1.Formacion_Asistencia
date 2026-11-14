@@ -1,7 +1,8 @@
 import asyncio
 
 import pytest
-from asistencia.models import Contexto
+
+from asistencia.models import Contexto, NodeError
 from asistencia.nodos import Nodo
 from asistencia.workflow import Workflow
 
@@ -20,7 +21,7 @@ class NodoFallo(Nodo):
 
     async def ejecutar(self, contexto: Contexto):
         contexto.alertas.append(f"Nodo {self.nombre}")
-        raise Exception(f"Nodo {self.nombre} ha fallado")
+        raise NodeError(f"Nodo {self.nombre} ha fallado")
 
 
 @pytest.fixture

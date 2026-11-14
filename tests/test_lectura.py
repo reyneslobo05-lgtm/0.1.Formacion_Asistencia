@@ -2,6 +2,7 @@ import csv
 from datetime import date
 
 import pytest
+
 from asistencia import lectura
 from asistencia.models import Alumno, DatosNoEncontradosError
 
@@ -134,8 +135,7 @@ def test_detectar_ausencia_vacia(tmp_path, monkeypatch):
 def test_detectar_ausencia_sin_file(tmp_path, monkeypatch):
     monkeypatch.setattr("asistencia.lectura.DIR_DATA", tmp_path)
 
-    archivo = tmp_path / "asistencia_2026-10.csv"
     with pytest.raises(DatosNoEncontradosError):
-        resultado = lectura.detectar_ausencia(
+        lectura.detectar_ausencia(
             fecha=date(2026, 10, 30), alumnos=lista_alumnos
         )
